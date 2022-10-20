@@ -80,6 +80,30 @@ public class Main {
 				System.out.println("내용 : " + foundArticle.body);
 			}
 			
+			else if(command.startsWith("article delete ")) {
+				
+				String commandBits[] = command.split(" ");
+				int id = Integer.parseInt(commandBits[2]);
+				
+				int foundindex = -1;
+				
+				for(int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					
+					if(id == article.id) {
+						foundindex = i;
+						break;
+					}
+				}
+				
+				if(foundindex == -1) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				} 
+				articles.remove(foundindex);
+				System.out.printf("%d 게시물이 삭제되었습니다.\n", id);
+			}
+			
 			else {
 				System.out.printf("%s(은)는 존재하지 않는 명령어입니다.\n", command);
 			}
