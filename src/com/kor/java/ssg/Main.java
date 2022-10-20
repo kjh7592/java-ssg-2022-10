@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+	
+	public static List<Article> articles = new ArrayList<>();
+	
 	public static void main(String[] args) {
 		System.out.println("===프로그램 시작===");
 
@@ -12,7 +15,6 @@ public class Main {
 
 		int lastArticleId = 0;
 		
-		List<Article> articles = new ArrayList<>();
 		
 		while(true) {
 			System.out.printf("명령어)");
@@ -60,16 +62,8 @@ public class Main {
 				String commandBits[] = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
 				
-				Article foundArticle = null;
+				Article foundArticle = getArticleById(id);
 				
-				for(int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
-					
-					if(id == article.id) {
-						foundArticle = article;
-						break;
-					}
-				}
 				
 				if(foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -80,22 +74,34 @@ public class Main {
 				System.out.println("제목 : " + foundArticle.title);
 				System.out.println("내용 : " + foundArticle.body);
 			}
+			else if(command.startsWith("article modify ")) {
+				
+				String commandBits[] = command.split(" ");
+				int id = Integer.parseInt(commandBits[2]);
+				
+				Article foundArticle = getArticleById(id);
+				
+				
+				if(foundArticle == null) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				}
+				System.out.printf("수정할 제목 : ");
+				String title = sc.nextLine();
+				System.out.printf("수정할 내용 : ");
+				String body = sc.nextLine();
+				
+				foundArticle.title = title;
+				foundArticle.body = body;
+				System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
+			}
 			
 			else if(command.startsWith("article delete ")) {
 				
 				String commandBits[] = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
 				
-				int foundindex = -1;
-				
-				for(int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
-					
-					if(id == article.id) {
-						foundindex = i;
-						break;
-					}
-				}
+				int foundindex = getArticleIndexById(id);
 				
 				if(foundindex == -1) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -115,6 +121,29 @@ public class Main {
 		sc.close();
 
 		System.out.println("===프로그램 끝===");
+	}
+
+	private static Article getArticleById(int id) {
+		
+		int index = getArticleIndexById(id);
+		
+		if(index != -1) {
+			
+			return articles.get(index);
+		}
+		return null;
+	}
+
+	private static int getArticleIndexById(int id) {
+		
+		for(int i = 0; i < articles.size(); i++) {
+			Article article = articles.get(i);
+			
+			if(id == article.id) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }
 
