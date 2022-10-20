@@ -54,6 +54,32 @@ public class Main {
 				}
 			}
 			
+			else if(command.startsWith("article detail ")) {
+				
+				String commandBits[] = command.split(" ");
+				int id = Integer.parseInt(commandBits[2]);
+				
+				Article foundArticle = null;
+				
+				for(int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					
+					if(id == article.id) {
+						foundArticle = article;
+						break;
+					}
+				}
+				
+				if(foundArticle == null) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				}
+				System.out.println("번호 : " + foundArticle.id);
+				System.out.println("날짜 : " + "2022-12-12 12:12:12");
+				System.out.println("제목 : " + foundArticle.title);
+				System.out.println("내용 : " + foundArticle.body);
+			}
+			
 			else {
 				System.out.printf("%s(은)는 존재하지 않는 명령어입니다.\n", command);
 			}
