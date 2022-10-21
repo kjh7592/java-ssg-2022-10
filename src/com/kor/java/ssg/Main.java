@@ -6,16 +6,19 @@ import java.util.Scanner;
 
 public class Main {
 	
-	public static List<Article> articles = new ArrayList<>();
+	private static List<Article> articles = new ArrayList<>();
+	
+	static {
+		articles = new ArrayList<>();
+	}
 	
 	public static void main(String[] args) {
 		System.out.println("===프로그램 시작===");
+		
+		makeTestArticles();
 
 		Scanner sc = new Scanner(System.in);
 
-		int lastArticleId = 0;
-		
-		
 		while(true) {
 			System.out.printf("명령어)");
 			String command = sc.nextLine();
@@ -30,8 +33,7 @@ public class Main {
 				break;
 			}
 			else if(command.equals("article write")) {
-				int id = lastArticleId + 1;
-				lastArticleId = id;
+				int id = articles.size() + 1;
 				String regDate = Util.getNowDateStr();
 				System.out.printf("제목 : ");
 				String title = sc.nextLine();
@@ -49,11 +51,11 @@ public class Main {
 					continue;
 				}
 				
-				System.out.println("번호	|	제목");
+				System.out.println("번호	|	조회	|	제목");
 				for(int i = articles.size() - 1; i >= 0 ; i--) {
 					Article article = articles.get(i);
 					
-					System.out.printf("%d	|	%s\n", article.id, article.title);
+					System.out.printf("%d	|	%d	|	%s\n", article.id, article.hit, article.title);
 				}
 			}
 			
@@ -69,10 +71,14 @@ public class Main {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
+				
+				foundArticle.incresehit();
+				
 				System.out.println("번호 : " + foundArticle.id);
 				System.out.println("날짜 : " + foundArticle.regDate);
 				System.out.println("제목 : " + foundArticle.title);
 				System.out.println("내용 : " + foundArticle.body);
+				System.out.println("조회 : " + foundArticle.hit);
 			}
 			else if(command.startsWith("article modify ")) {
 				
@@ -123,6 +129,16 @@ public class Main {
 		System.out.println("===프로그램 끝===");
 	}
 
+
+	private static void makeTestArticles() {
+		System.out.println("테스트를 위한 게시물 데이터를 생성합니다.");
+		
+		articles.add(new Article(1, Util.getNowDateStr(), "제목1", "내용1", 10));
+		articles.add(new Article(2, Util.getNowDateStr(), "제목2", "내용2", 22));
+		articles.add(new Article(3, Util.getNowDateStr(), "제목3", "내용3", 33));
+	}
+
+
 	private static Article getArticleById(int id) {
 		
 		int index = getArticleIndexById(id);
@@ -152,11 +168,21 @@ class Article {
 	String regDate;
 	String title;
 	String body;
+	int hit;
 	
 	public Article(int id, String regDate, String title, String body) {
+		this(id, regDate, title, body, 0);
+	}
+	
+	public Article(int id, String regDate, String title, String body, int hit) {
 		this.id = id;
 		this.regDate = regDate;
 		this.title = title;
 		this.body = body;
+		this.hit = hit;
+	}
+	
+	public void incresehit() {
+		hit++;
 	}
 }
